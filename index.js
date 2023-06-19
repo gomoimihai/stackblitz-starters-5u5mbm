@@ -1,3 +1,14 @@
-// run `node index.js` in the terminal
+const openTripApi = require('./open-trip-api')
 
-console.log(`Hello Node.js v${process.versions.node}!`);
+exports.main = async (event) => {
+  return openTripApi.fetchRoutePlan(JSON.parse(event.body)).then((resp) => ({
+    statusCode: 200,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(resp)
+  })).catch((err) => ({
+    statusCode: 400,
+    body: err.message
+  }))
+}
